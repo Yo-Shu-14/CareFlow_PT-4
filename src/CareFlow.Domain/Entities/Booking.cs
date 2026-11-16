@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CareFlow.Domain.Entities;
 
-internal class Booking
+public class Booking
 {
     public int BookingId { get; set; }
 

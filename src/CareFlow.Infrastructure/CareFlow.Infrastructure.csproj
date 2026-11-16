@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Data\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 
@@ -20,6 +18,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CareFlow.Application\CareFlow.Application.csproj" />
+    <ProjectReference Include="..\CareFlow.Domain\CareFlow.Domain.csproj" />
   </ItemGroup>
 
 </Project>

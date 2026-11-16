@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CareFlow.Domain.Entities;
 
-internal class Patient
+public class Patient
 {
     public int PatientId { get; set; }
 
