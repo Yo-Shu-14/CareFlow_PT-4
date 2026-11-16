@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CareFlow.Application/CareFlow.Application.csproj" />
+    <Project Path="src/CareFlow.Desktop/CareFlow.Desktop.csproj" />
+    <Project Path="src/CareFlow.Domain/CareFlow.Domain.csproj" />
+    <Project Path="src/CareFlow.Infrastructure/CareFlow.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CareFlow.Test/CareFlow.Test.csproj" Id="a9bad90b-d53a-49e8-aa8b-938742aa4ffb" />
+  </Folder>
+</Solution>
