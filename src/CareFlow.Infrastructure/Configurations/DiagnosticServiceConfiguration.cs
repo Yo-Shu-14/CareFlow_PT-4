@@ -24,5 +24,40 @@ public class DiagnosticServiceConfiguration : IEntityTypeConfiguration<Diagnosti
             table.HasCheckConstraint(
                 "CK_DiagnosticService_DailyCapacity",
                 "\"DailyCapacity\" > 0"));
+
+
+        builder.HasData(
+            new DiagnosticServices
+            {
+                DiagnosticServiceId = 1,
+                ServiceName = "Complete Blood Count (CBC)",
+                DailyCapacity = 20
+            },
+            new DiagnosticServices
+            {
+                DiagnosticServiceId = 2,
+                ServiceName = "Chest X-Ray",
+                DailyCapacity = 10
+            },
+            new DiagnosticServices
+            {
+                DiagnosticServiceId = 3,
+                ServiceName = "Ultrasound",
+                DailyCapacity = 8
+            },
+            new DiagnosticServices
+            {
+                DiagnosticServiceId = 4,
+                ServiceName = "Electrocardiogram (ECG)",
+                DailyCapacity = 12
+            },
+            new DiagnosticServices
+            {
+                DiagnosticServiceId = 5,
+                ServiceName = "Blood Chemistry",
+                DailyCapacity = 15
+            }
+        );
+
     }
 }
