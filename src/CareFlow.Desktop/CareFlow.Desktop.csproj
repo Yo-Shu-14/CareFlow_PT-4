@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CareFlow.Application\CareFlow.Application.csproj" />
+    <ProjectReference Include="..\CareFlow.Domain\CareFlow.Domain.csproj" />
     <ProjectReference Include="..\CareFlow.Infrastructure\CareFlow.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
