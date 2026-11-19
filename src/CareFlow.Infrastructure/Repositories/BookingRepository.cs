@@ -1,4 +1,8 @@
-﻿using CareFlow.Application.DTOs;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CareFlow.Application.DTOs;
 using CareFlow.Application.Interfaces;
 using CareFlow.Domain.Entities;
 using CareFlow.Infrastructure.Data;
@@ -19,6 +23,22 @@ public class BookingRepository : IBookingRepository
     {
         return await _context.Patients
             .AnyAsync(patient => patient.PatientId == patientId);
+    }
+
+    public async Task<List<Patient>> GetPatientsAsync()
+    {
+        return await _context.Patients
+            .AsNoTracking()
+            .OrderBy(patient => patient.LastName)
+            .ThenBy(patient => patient.FirstName)
+            .ToListAsync();
+    }
+
+    public async Task<Patient?> GetPatientByIdAsync(int patientId)
+    {
+        return await _context.Patients
+            .AsNoTracking()
+            .FirstOrDefaultAsync(patient => patient.PatientId == patientId);
     }
 
     public async Task<List<DiagnosticServiceAvailabilityDto>>
@@ -144,6 +164,18 @@ public class BookingRepository : IBookingRepository
                 .ThenInclude(item => item.DiagnosticService)
             .Where(booking => booking.BookingDate == bookingDate.Date)
             .OrderBy(booking => booking.BookingId)
+            .ToListAsync();
+    }
+
+    public async Task<List<Booking>> GetAllBookingsAsync()
+    {
+        return await _context.Bookings
+            .AsNoTracking()
+            .Include(booking => booking.Patient)
+            .Include(booking => booking.BookingServices)
+                .ThenInclude(item => item.DiagnosticService)
+            .OrderByDescending(booking => booking.BookingDate)
+            .ThenByDescending(booking => booking.BookingId)
             .ToListAsync();
     }
 }
