@@ -1,8 +1,9 @@
-﻿using CareFlow.Application.DTOs;
-using CareFlow.Application.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
+using CareFlow.Application.DTOs;
+using CareFlow.Application.Interfaces;
 
 namespace CareFlow.Application.Services;
 
@@ -13,6 +14,22 @@ public class BookingService : IBookingService
     public BookingService(IBookingRepository bookingRepository)
     {
         _bookingRepository = bookingRepository;
+    }
+
+    public async Task<List<PatientDto>> GetPatientsAsync()
+    {
+        var patients = await _bookingRepository.GetPatientsAsync();
+        return patients.Select(p => new PatientDto
+        {
+            PatientId = p.PatientId,
+            FirstName = p.FirstName,
+            LastName = p.LastName
+        }).ToList();
+    }
+
+    public async Task<List<DiagnosticServiceAvailabilityDto>> GetServiceAvailabilityAsync(DateTime bookingDate)
+    {
+        return await _bookingRepository.GetServiceAvailabilityAsync(bookingDate.Date);
     }
 
     public async Task<BookingResultDto> CreateBookingAsync(
@@ -51,7 +68,8 @@ public class BookingService : IBookingService
             return Failed("Duplicate diagnostic services are not allowed.");
         }
 
-        if (!await _bookingRepository.PatientExistsAsync(request.PatientId))
+        var patient = await _bookingRepository.GetPatientByIdAsync(request.PatientId);
+        if (patient is null)
         {
             return Failed("The selected patient does not exist.");
         }
@@ -96,6 +114,7 @@ public class BookingService : IBookingService
                 Message = "Booking successfully created.",
                 BookingId = bookingId,
                 PatientId = request.PatientId,
+                PatientName = $"{patient.FirstName} {patient.LastName}".Trim(),
                 BookingDate = request.BookingDate.Date,
                 DiagnosticServiceNames = selectedServices
                     .Select(service => service.ServiceName)
@@ -120,7 +139,24 @@ public class BookingService : IBookingService
             Success = true,
             BookingId = booking.BookingId,
             PatientId = booking.PatientId,
-            PatientName = $"{booking.Patient.FirstName} {booking.Patient.LastName}",
+            PatientName = $"{booking.Patient.FirstName} {booking.Patient.LastName}".Trim(),
+            BookingDate = booking.BookingDate,
+            DiagnosticServiceNames = booking.BookingServices
+                .Select(bs => bs.DiagnosticService.ServiceName)
+                .ToList()
+        }).ToList();
+    }
+
+    public async Task<List<BookingResultDto>> GetAllBookingsAsync()
+    {
+        var bookings = await _bookingRepository.GetAllBookingsAsync();
+
+        return bookings.Select(booking => new BookingResultDto
+        {
+            Success = true,
+            BookingId = booking.BookingId,
+            PatientId = booking.PatientId,
+            PatientName = $"{booking.Patient.FirstName} {booking.Patient.LastName}".Trim(),
             BookingDate = booking.BookingDate,
             DiagnosticServiceNames = booking.BookingServices
                 .Select(bs => bs.DiagnosticService.ServiceName)
